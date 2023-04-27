@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Request, Response, NextFunction } from "express";
+import sanitize from "mongo-sanitize"; // ngan chan injection
+import ip from "ip";
 import { client } from "../../services/redis.service";
 import { ObjectDatabase } from "../../models/auth";
 import { TOKEN_SECRET } from "../../config/auth";
@@ -11,6 +13,7 @@ import {
 } from "../../middlewares/loginAccountLimiter";
 const ROLES = ObjectDatabase.role;
 const USER = ObjectDatabase.user;
+
 const SignUp = async (req: Request, res: Response) => {
   const checkUserName = await USER.findOne({ username: req.body.username });
   if (checkUserName)
@@ -77,10 +80,10 @@ const SignUp = async (req: Request, res: Response) => {
 };
 
 const SignIn = async (req: Request, res: Response) => {
-  let isBoolean = await checkLoginAttempts(req.body.username);
+  let isBoolean = await checkLoginAttempts(ip.address());
   console.log("isBoolean1111111111111111", isBoolean);
   if (isBoolean?.pass) {
-    USER.findOne({ username: req.body.username })
+    USER.findOne({ username: sanitize(req.body.username) })
       .populate("roles", "-__v")
       .then(async (user: any) => {
         if (!user) {
@@ -93,14 +96,14 @@ const SignIn = async (req: Request, res: Response) => {
           user.password
         );
         if (!passwordIsValid) {
-          isBoolean = await setLoginAttempts(req.body.username);
+          isBoolean = await setLoginAttempts(ip.address());
           console.log("isBoolean2222222222", isBoolean);
           const remaining = 3 - parseInt(isBoolean.data.count);
           return res.status(404).send({
             message: `Bạn còn ${remaining ? remaining : "3"} lần nhập`,
           });
         }
-        await client.expire(`ll:${req.body.username}`, 0);
+        await client.expire(`ll:${ip.address()}`, 0);
         const token = jwt.sign({ id: user.id }, TOKEN_SECRET, {
           expiresIn: 86400, // 24 hours
         });
