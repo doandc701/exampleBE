@@ -1,10 +1,7 @@
 import jwt from "jsonwebtoken";
-
 import { Request, Response, NextFunction } from "express";
-import { ObjectDatabase } from "../models";
-import * as dotenv from "dotenv";
+import { ObjectDatabase } from "../models/auth";
 import { TOKEN_SECRET } from "../config/auth";
-dotenv.config();
 const ROLES = ObjectDatabase.role;
 const USER = ObjectDatabase.user;
 
@@ -18,19 +15,6 @@ const verifyToken = (req: any, res: Response, next: NextFunction) => {
   } catch (err) {
     return res.status(400).send("Invalid Token");
   }
-  // let token = req.headers["x-access-token"];
-  // if (!token) {
-  //   return res.status(403).send({ message: "No token provided!" });
-  // }
-  // jwt.verify(token, TOKEN_SECRET, (err: any, decoded: any) => {
-  //   if (err) {
-  //     return res.status(401).send({
-  //       message: "Unauthorized!",
-  //     });
-  //   }
-  //   req.userId = decoded!.id;
-  //   next();
-  // });
 };
 
 const isAdmin = (req: any, res: Response, next: NextFunction) => {

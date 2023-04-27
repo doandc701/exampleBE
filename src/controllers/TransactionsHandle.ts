@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ObjectTest } from "../models/transactions";
+import { ObjectTest } from "../models/transactions.model";
 import { uuid } from "uuidv4";
 
 export async function getTransactions(req: Request, res: Response) {
