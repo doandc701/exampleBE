@@ -7,6 +7,9 @@ import {
 } from "../../controllers/Authorization/UserController";
 
 import { verifyToken, isAdmin, isModerator } from "../../middlewares/authJwt";
+import uploads from "../../middlewares/upload";
+import authPage from "../../middlewares/basicAuth";
+
 import {
   SignUp,
   SignIn,
@@ -22,8 +25,14 @@ import { loginAccountLimiter } from "../../services/rateLimit.service";
 const router = express.Router();
 
 // router.post("/auth/signup", postUsers);
-router.post("/signup", SignUp);
-router.post("/signin", loginAccountLimiter, SignIn);
+// router.post("/signup", uploads.single("avatar[]"), SignUp);
+router.post("/signup", uploads.single("avatar"), SignUp);
+router.post(
+  "/signin",
+  authPage(["644116f719d977e49dc75c3d", "644116f219d977e49dc75c3b"]),
+  SignIn,
+  loginAccountLimiter,
+);
 
 // Authorization:
 // GET /api/test/all

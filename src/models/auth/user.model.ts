@@ -7,6 +7,7 @@ const User = new Schema(
     username: String,
     email: String,
     password: String,
+    avatar: String,
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,

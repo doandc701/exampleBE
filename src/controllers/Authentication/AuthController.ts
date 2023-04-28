@@ -11,6 +11,7 @@ import {
   checkLoginAttempts,
   setLoginAttempts,
 } from "../../middlewares/loginAccountLimiter";
+
 const ROLES = ObjectDatabase.role;
 const USER = ObjectDatabase.user;
 
@@ -27,6 +28,21 @@ const SignUp = async (req: Request, res: Response) => {
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
   });
+  // upload 1 ảnh
+  if (req.file) {
+    user.avatar = req.file.path;
+  }
+
+  /* up load nhieu anh
+   if (req.files) {
+    let path = "";
+    req.files.forEach(function (files, index, arr) {
+      path = path + files.path + ",";
+    });
+    path = path.substring(0, path.lastIndexOf(","));
+    user.avatar = path;
+  }
+  */
   user
     .save()
     .then((user) => {
@@ -80,9 +96,9 @@ const SignUp = async (req: Request, res: Response) => {
 };
 
 const SignIn = async (req: Request, res: Response) => {
-  let isBoolean = await checkLoginAttempts(ip.address());
-  console.log("isBoolean1111111111111111", isBoolean);
-  if (isBoolean?.pass) {
+  let checkRedis = await checkLoginAttempts(ip.address());
+  // console.log("checkRedis1111111111111111", checkRedis);
+  if (checkRedis?.pass) {
     USER.findOne({ username: sanitize(req.body.username) })
       .populate("roles", "-__v")
       .then(async (user: any) => {
@@ -96,11 +112,15 @@ const SignIn = async (req: Request, res: Response) => {
           user.password
         );
         if (!passwordIsValid) {
-          isBoolean = await setLoginAttempts(ip.address());
-          console.log("isBoolean2222222222", isBoolean);
-          const remaining = 3 - parseInt(isBoolean.data.count);
+          checkRedis = await setLoginAttempts(ip.address());
+          // console.log("checkRedis2222222222", checkRedis);
+          const remaining = 3 - parseInt(checkRedis.data.count);
           return res.status(404).send({
-            message: `Bạn còn ${remaining ? remaining : "3"} lần nhập`,
+            message: `${
+              remaining
+                ? `Bạn còn ${remaining} lần nhập`
+                : "Username or Password not correct."
+            }`,
           });
         }
         await client.expire(`ll:${ip.address()}`, 0);
@@ -124,11 +144,11 @@ const SignIn = async (req: Request, res: Response) => {
         return;
       });
   }
-  if (!isBoolean?.pass) {
-    if (isBoolean?.data) {
-      const wait1 = isBoolean.wait;
-      console.log(wait1);
-      const remaining = 3 - parseInt(isBoolean.data.count);
+  if (!checkRedis?.pass) {
+    if (checkRedis?.data) {
+      const wait1 = checkRedis.wait;
+      // console.log(wait1);
+      const remaining = 3 - parseInt(checkRedis.data.count);
       if (remaining <= 0) {
         return res.status(404).send({
           message: `Tài khoản của bạn đã bị khóa, vui lòng thử lại sau ${wait1} giây.`,
