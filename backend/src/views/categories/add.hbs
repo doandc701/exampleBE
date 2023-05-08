@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link active" aria-current="page" href="/categories">Categories</a>
+                <a class="nav-link" href="/products">Products</a>
+                <a class="nav-link" href="/blog">Blog</a>
+                <a class="nav-link " href="/order-cart">Orders
+                    Information</a>
+            </div>
+        </div>
+    </div>
+</nav>
+{{!-- form add --}}
+<h3 class="mt-4" style="text-align:center">Add/ Edit Categories</h3>
+
+<form class="row g-3 needs-validation" style="display:block" novalidate="" method="POST"
+    action="/categories/store">
+
+    <div class="col-md">
+        <label for="validationCustom01" class="form-label">Name Categories</label>
+        <input type="text" class="form-control" id="validationCustom01" value="" required="" name="name" />
+        <div class="invalid-feedback">
+            Please select a valid name categories.
+        </div>
+    </div>
+
+    <div class="col-12">
+
+    </div>
+    <div class="col-12">
+        <button class="btn btn-primary" type="submit">Submit form</button>
+    </div>
+</form>

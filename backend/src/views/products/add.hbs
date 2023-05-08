@@ -1,0 +1,115 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="/categories">Categories</a>
+        <a class="nav-link" href="/products">Products</a>
+        <a class="nav-link" href="/blog">Blog</a>
+        <a class="nav-link " href="/order-cart">Orders
+          Information</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+{{!-- form add --}}
+<h3 class="mt-4" style="text-align:center">Thêm/ Sửa Sản Phẩm</h3>
+
+<form class="row g-3 needs-validation" style="display:block" novalidate="" method="POST"
+  action="/products/store">
+
+  <div class="col-md">
+    <label for="validationCustom01" class="form-label">Name Product</label>
+    <input type="text" class="form-control" id="validationCustom01" value="" required="" name="name" />
+    <div class="invalid-feedback">
+      Please select a valid name product.
+    </div>
+  </div>
+
+  <div class="col-md">
+    <label for="validationCustom02" class="form-label">Image</label>
+    <input type="text" class="form-control" id="validationCustom02" value="" required="" name="images" />
+    <div class="invalid-feedback">
+      Please select a valid images.
+    </div>
+  </div>
+
+  <div class="col-md">
+    <label for="validationCustom04" class="form-label">Categories</label>
+    <select class="form-select" id="validationCustom04" required="" name="categories">
+      {{#each categories}}
+      <option value="{{this._id}}">{{this.name}}</option>
+      {{/each }}
+    </select>
+    <div class="invalid-feedback">
+      Please select a valid categories.
+    </div>
+  </div>
+
+  <div class="col-md">
+    <label for="validationCustom05" class="form-label">Original Price</label>
+    <input type="number" class="form-control" id="validationCustom05" required="" name="original_price" min="0" />
+    <div class="invalid-feedback">
+      Please provide a valid original price.
+    </div>
+  </div>
+  <div class="col-md">
+    <label for="validationCustom06" class="form-label">Price</label>
+    <input type="number" class="form-control" id="validationCustom06" required="" name="price" min="0" />
+    <div class="invalid-feedback">
+      Please provide a valid price.
+    </div>
+  </div>
+  <div class="col-md">
+    <label for="validationCustom07" class="form-label">Image Child 1</label>
+    <input type="text" class="form-control" id="validationCustom07" required="" name="imagechild1" />
+    <div class="invalid-feedback">
+      Please provide a valid image child 1.
+    </div>
+  </div>
+  <div class="col-md">
+    <label for="validationCustom08" class="form-label">Image Child 2</label>
+    <input type="text" class="form-control" id="validationCustom08" required="" name="imagechild2" />
+    <div class="invalid-feedback">
+      Please provide a valid image child 2.
+    </div>
+  </div>
+  <div class="col-md">
+    <label for="validationCustom09" class="form-label">Image Child 3</label>
+    <input type="text" class="form-control" id="validationCustom09" required="" name="imagechild3" />
+    <div class="invalid-feedback">
+      Please provide a valid image child 3.
+    </div>
+  </div>
+  <div class="col-md">
+    <label for="validationCustom10" class="form-label">Product Type</label>
+    <select class="form-select" id="validationCustom10" required="" name="product_type">
+      <option value="">Choose...</option>
+      <option>new</option>
+      <option>hot</option>
+    </select>
+    <div class="invalid-feedback">
+      Please select a valid product type.
+    </div>
+  </div>
+
+  <div class="col-md">
+    <label for="validationCustom11" class="form-label">Description</label>
+    <textarea type="text" class="form-control" id="validationCustom11" required="" style="height: 100px"
+      name="description"></textarea>
+    <div class="invalid-feedback">
+      Please provide a valid description.
+    </div>
+  </div>
+
+  <div class="col-12">
+
+  </div>
+  <div class="col-12">
+    <button class="btn btn-primary" type="submit">Submit form</button>
+  </div>
+</form>

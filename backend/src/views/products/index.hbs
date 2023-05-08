@@ -1,0 +1,108 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link active" aria-current="page" href="/categories">Categories</a>
+                <a class="nav-link" href="/products">Products</a>
+                <a class="nav-link" href="/blog">Blog</a>
+                <a class="nav-link " href="/order-cart">Orders
+                    Information</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<a href="/products/create">
+    <button type="button" class="btn btn-success mt-4">Thêm</button>
+</a>
+{{!-- tables --}}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name Product</th>
+            <th scope="col">Image</th>
+            <th scope="col">Original Price</th>
+            <th scope="col">Price</th>
+            <th scope="col">Product Type</th>
+            <th scope="col">Categories</th>
+            <th scope="col">Time</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each product}}
+        <tr>
+            {{!-- cách viết sum @index 1 <=> sum(index,1) --}}
+                <th scope="row">{{ sum @index 1 }}</th>
+                <td>{{this.name}}</td>
+                <td>
+                    <img src="{{this.images}}" style="width:100px" />
+                </td>
+                <td>{{formatAmount this.original_price}}</td>
+                <td>{{formatAmount this.price}}</td>
+                <td>{{this.product_type}}</td>
+                <td>{{this.categories.name}}</td>
+                <td>{{ this.createdAt}}</td>
+                <td>
+                    <a type="button" href="/products/{{this._id}}/edit" class="btn btn-warning">Sửa</a>
+                </td>
+                <td>
+                    <a type="button" href="#" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#delete-products" data-id="{{this._id}}">Xóa</a>
+                </td>
+        </tr>
+        {{/each}}
+
+
+    </tbody>
+</table>
+</div>
+</main>
+
+{{!-- Dialog confirm delete --}}
+<div class="modal fade" id="delete-products" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có muốn xóa sản phẩm ?
+            </div>
+            <div class="modal-footer">
+                <button id="btn-delete-product" type="button" class="btn btn-primary">OK</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{!-- Delete hiden form --}}
+<form name="delete-product-form" method="POST" />
+{{!-- Dialog get ID product-delete --}}
+<script>
+    let productID;
+    // lấy ra form delete
+    const deleteForm = document.forms['delete-product-form']
+    //console.log(deleteForm)
+    const deleteProductModal = document.getElementById('delete-products')
+    deleteProductModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget
+        productID = button.getAttribute('data-id')
+
+    })
+
+    const btnDeleteProduct = document.getElementById('btn-delete-product')
+    btnDeleteProduct.addEventListener('click', () => {
+        console.log(12)
+        //alert(productID)
+        // set form action
+        deleteForm.action = '/products/' + productID + '?_method=DELETE'
+        deleteForm.submit()
+    })
+</script>
